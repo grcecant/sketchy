@@ -1,0 +1,87 @@
+SKETCHY README
+
+OVERVIEW:
+
+My Sketchy program consists of three packages: commands, main, and shapes. The commands package
+contains the Command interface, and all the classes that implement this interface that represent
+different commands the user can deal with: for example, deleting a shape, drawing a line, and
+filling a shape.
+
+The main package contains most of the logical and graphical handling of the program: the Sketchy
+class is the top-level logical class, PaneOrganizer is the top-level graphical class, and the
+Control class also deals with a great deal of graphical setup (the entire button pane, which
+includes the buttons, color pickers, radio buttons, slider, and labels). The package also contains
+the SelectOption enum, which is used in conjunction with the radio buttons to help determine what
+action to carry out at a certain point in time. Sketchy, in particular, contains many other classes,
+and many instances of many of these classes (ex: many instances of DrawLine, SketchyRectangle, Raise,
+CurvedLine, etc.). In many cases when instances of these classes are instantiated and initialized,
+instance variables from Sketchy are passed as arguments to form associations between the classes
+(for example: the arraylist of shapes called this.shapes is often passed, and so is the arraylist
+of saveables called this.saveables).
+
+The shapes package contains the classes representing a SketchyRectangle, a SketchyEllipse, and a
+CurvedLine, as well as two interfaces: Saveable and SketchyShape. SketchyRectangle and SketchyEllipse
+are wrapper classes for a Rectangle and an Ellipse, respectively, and both extend Saveable and
+SketchyShape. CurvedLine wraps a Polyline, and only extends the Saveable interface. All three types
+of shapes can be saved, undo-ed, and redo-ed, though only ellipses and rectangles can have actions
+carried out on them (ex: fill, delete, etc.).
+
+The user can interact with the program in many ways: they can select a radiobutton to choose a
+drawing or selection option, they can change the color using the color picker, they can set the
+stroke width using the slider (which spans from 0 to 10), they can fill, delete, raise, or lower
+a selected shape, and they can also undo, redo, save, and load. Certain buttons require the
+additional mouse interaction from the user; for example, selecting the draw rectangle radio
+button will not immediately create a rectangle, but rather, the user needs to click and drag to
+create and resize the rectangle.
+
+
+EXTRA CREDIT:
+
+One extra component that I added to my program is the slider in the control pane to adjust
+the stroke width of the CurvedLines. When the slider is adjusted, the width value of future
+lines will correspond to the new value of the slider (from 0 to 10). Another extra component
+I added is that the user can undo actions by pressing control+Z and can redo actions by pressing
+control+Y, in addition to being able to undo and redo by pressing the undo and redo buttons.
+To implement this, I added a keypress handler method to the Sketchy class, as well as having the
+Control class detect the key presses (which are passed as an argument to the keypress handler
+method in the Sketchy class).
+
+
+DESIGN CHOICES:
+
+One design choice I made that is different from previous projects is that I had my control
+pane respond to key presses, rather than the Sketchy pane. When I had my keyPress handling in
+the Sketchy class (top-level logical class), I ran into an issue where the control pane would
+steal the focus away from the Sketchy pane, even when I set the focus to be un-traversable.
+To remedy this, I put the logic to handle a keypress in the Sketchy class (the keyPressed(e)
+method), and just had the control pane do the actual detection of a key press. However, the
+Sketchy class does deal with all the mouse handling: mouse pressed, mouse dragged, and mouse
+released.
+
+My program also utilizes three interfaces: Command, Saveable, and SketchyShape. Command is
+implemented by all the command classes, because they all share the same methods (undo
+and redo), but implement them in different ways. This is why I chose to use an interface
+instead of an abstract class. Saveable is implemented by SketchyRectangle, SketchyShape,
+and CurvedLine, since they all need to know how to write themselves to a file to be saved,
+but write themselves to the file in different ways. Lastly, SketchyShape is implemented
+by SketchyRectangle and SketchyEllipse, because they both need to be able to carry out the
+same actions (ex: raise, lower, changeColor, etc.), but implement them in different ways.
+
+In addition, I only have one method in my Saveable interface, writeToFile(CS15FileIO io),
+which has the object write itself to the given file, and do not have a method in the
+interface for the object reading itself from a file. This is because I found it easier
+and clearer to have the Sketchy class handle the reading, because things got complicated
+and messy when I tried to have a shape read itself from the file, since the shape first
+needed to be instantiated from the Sketchy class reading from the file, anyway. However,
+the Saveable interface was still necessary for the sake of polymorphism, because I have
+an array of Saveables in the Sketchy class that was necessary for iteration to write
+every object to the file.
+
+
+KNOWN BUGS: None.
+
+
+DEBUGGING COLLABORATORS: None.
+
+
+HOURS SPENT: Roughly 50.
